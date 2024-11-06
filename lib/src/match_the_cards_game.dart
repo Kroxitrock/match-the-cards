@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:match_the_cards/src/components/play_card.dart';
 import 'package:match_the_cards/src/components/play_area.dart';
 import 'package:match_the_cards/src/config.dart';
 import 'package:match_the_cards/src/model/difficulty_level.dart';
+import 'package:match_the_cards/src/widgets/results_screen.dart';
 
 class MatchTheCardsGame extends FlameGame {
   final cardColors = [
@@ -94,6 +96,10 @@ class MatchTheCardsGame extends FlameGame {
   }
 
   void selectCard(PlayCard playCard) {
+    if (selectedCards.contains(playCard)) {
+      return;
+    }
+
     selectedCards.add(playCard);
     if (selectedCards.length < 2) {
       return;
@@ -109,5 +115,8 @@ class MatchTheCardsGame extends FlameGame {
     selectedCards.removeLast();
   }
 
-  void over() {}
+  void over() {
+    Get.offAll(() =>
+        ResultsScreen(attempts: attempts, difficultyLevel: difficultyLevel));
+  }
 }

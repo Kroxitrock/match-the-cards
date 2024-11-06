@@ -30,7 +30,8 @@ class PlayCard extends RectangleComponent
   void selfDestruct() {
     removeFromParent();
 
-    if (game.world.children.query<PlayCard>().length == 1) {
+    // In this case we delete on length 2 as we delete cards in pairs
+    if (game.world.children.query<PlayCard>().length <= 2) {
       game.over();
     }
   }
