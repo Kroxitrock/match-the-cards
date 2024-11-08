@@ -1,7 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/geometry.dart';
-import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:match_the_cards/src/config.dart';
 import 'package:match_the_cards/src/match_the_cards_game.dart';
@@ -17,7 +15,7 @@ class PlayCard extends RectangleComponent
             cardHeight,
           ),
           paint: Paint()
-            ..color = secretColor
+            ..color = Colors.black
             ..style = PaintingStyle.fill,
         );
 
@@ -33,6 +31,14 @@ class PlayCard extends RectangleComponent
     // In this case we delete on length 2 as we delete cards in pairs
     if (game.world.children.query<PlayCard>().length <= 2) {
       game.over();
+    }
+  }
+
+  void flip() {
+    if (paint.color == Colors.black) {
+      paint.color = secretColor;
+    } else {
+      paint.color = Colors.black;
     }
   }
 }

@@ -14,19 +14,19 @@ class LevelSelectScreen extends StatelessWidget {
     final levelButtons = [
       ElevatedButton(
         onPressed: () => Get.to(
-          () => const GameScreen(DifficultyLevel.easy),
+          () => GameScreen(DifficultyLevel.easy),
         ),
         child: const Text("Easy"),
       ),
       ElevatedButton(
         onPressed: () => Get.to(
-          () => const GameScreen(DifficultyLevel.medium),
+          () => GameScreen(DifficultyLevel.medium),
         ),
         child: const Text("Medium"),
       ),
       ElevatedButton(
         onPressed: () => Get.to(
-          () => const GameScreen(DifficultyLevel.hard),
+          () => GameScreen(DifficultyLevel.hard),
         ),
         child: const Text("Hard"),
       ),

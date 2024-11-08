@@ -8,6 +8,7 @@ import 'package:match_the_cards/src/components/play_card.dart';
 import 'package:match_the_cards/src/components/play_area.dart';
 import 'package:match_the_cards/src/config.dart';
 import 'package:match_the_cards/src/model/difficulty_level.dart';
+import 'package:match_the_cards/src/model/high_score.dart';
 import 'package:match_the_cards/src/widgets/results_screen.dart';
 
 class MatchTheCardsGame extends FlameGame {
@@ -20,11 +21,13 @@ class MatchTheCardsGame extends FlameGame {
     Colors.orange,
   ]..shuffle();
   final selectedCards = [];
-  var attempts = 0;
+  var attempts = 0.obs;
+  var gameFinished = false;
 
   final DifficultyLevel difficultyLevel;
+  final HighScore? previousHighScore;
 
-  MatchTheCardsGame(this.difficultyLevel)
+  MatchTheCardsGame(this.difficultyLevel, this.previousHighScore)
       : super(
           camera: CameraComponent.withFixedResolution(
             width: gameWidth,
@@ -43,6 +46,7 @@ class MatchTheCardsGame extends FlameGame {
 
     world.add(PlayArea());
 
+    overlays.add("Test");
     initCards();
   }
 
@@ -95,12 +99,14 @@ class MatchTheCardsGame extends FlameGame {
     ]);
   }
 
-  void selectCard(PlayCard playCard) {
+  void selectCard(PlayCard playCard) async {
     if (selectedCards.contains(playCard)) {
       return;
     }
 
     selectedCards.add(playCard);
+    playCard.flip();
+    await Future.delayed(const Duration(milliseconds: waitDuration));
     if (selectedCards.length < 2) {
       return;
     }
@@ -109,6 +115,9 @@ class MatchTheCardsGame extends FlameGame {
     if (selectedCards[0].secretColor == selectedCards[1].secretColor) {
       selectedCards[0].selfDestruct();
       selectedCards[1].selfDestruct();
+    } else {
+      selectedCards[0].flip();
+      selectedCards[1].flip();
     }
 
     selectedCards.removeLast();
@@ -116,7 +125,10 @@ class MatchTheCardsGame extends FlameGame {
   }
 
   void over() {
-    Get.offAll(() =>
-        ResultsScreen(attempts: attempts, difficultyLevel: difficultyLevel));
+    if (gameFinished) return;
+
+    gameFinished = true;
+    Get.offAll(() => ResultsScreen(
+        attempts: attempts.value, difficultyLevel: difficultyLevel));
   }
 }
